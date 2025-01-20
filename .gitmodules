@@ -4,3 +4,6 @@
 [submodule "source/min-lib"]
 	path = source/min-lib
 	url = https://github.com/Cycling74/min-lib.git
+[submodule "source/projects/min.playground_tilde/choc"]
+	path = source/projects/min.playground_tilde/choc
+	url = git@github.com:Tracktion/choc.git
