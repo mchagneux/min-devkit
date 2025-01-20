@@ -45,6 +45,11 @@
 			<description>Choose a named buffer~ from which to read. </description>
 		</method>
 
+		<method name='float'>
+			<digest>Set the channel to read from the buffer~</digest>
+			<description>Set the channel to read from the buffer~. The channel number uses 1-based counting. </description>
+		</method>
+
 	</methodlist>
 
 

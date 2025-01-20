@@ -3,22 +3,39 @@
 ///	@copyright	Copyright 2018 The Min-DevKit Authors. All rights reserved.
 ///	@license	Use of this source code is governed by the MIT License found in the License.md file.
 
+
+#include "./window.h"
+
 #include "c74_min.h"
+#include "c74_min_message.h"
+#include <memory>
+
+
+
 
 using namespace c74::min;
 
 
 class playground : public object<playground>, public vector_operator<> {
+
+private: 
+    WindowWithWebview windowWithWebview;
+    bool windowVisible = false; 
+
 public:
-    MIN_DESCRIPTION	{ "Read from a buffer~." };
-    MIN_TAGS		{ "audio, sampling" };
+    MIN_DESCRIPTION	{ "Load a choc window." };
+    MIN_TAGS		{ "custom gui" };
     MIN_AUTHOR		{ "RM Estali" };
     MIN_RELATED		{ "index~, buffer~, wave~" };
 
     inlet<>  m_inlet_index	    { this, "(signal) Sample index" };
     inlet<>  m_inlet_channel	{ this, "(float) Audio channel to use from buffer~" };
+    inlet<>  m_window	    { this, "Open / close window" , "bang"};
+    
+    
     outlet<> m_outlet_main		{ this, "(signal) Sample value at index", "signal" };
     outlet<> m_outlet_changed	{ this, "(symbol) Notification that the content of the buffer~ changed." };
+
 
     buffer_reference m_buffer { this,
         MIN_FUNCTION {    // will receive a symbol arg indicating 'binding', 'unbinding', or 'modified'
@@ -46,6 +63,17 @@ public:
             return {};
         }
     };
+
+    message<> m_open_close {this, "bang", "Open or close the UI", 
+    MIN_FUNCTION { 
+        if (inlet == 2){
+            windowVisible = !windowVisible;
+            windowWithWebview.window.setVisible(windowVisible);
+            if (windowVisible) windowWithWebview.window.toFront();
+        }
+        return {};
+        }
+    }; 
 
     attribute<int, threadsafe::no, limit::clamp> m_channel {this, "channel", 1,
         description {"Channel to read from the buffer~. The channel number uses 1-based counting."},
